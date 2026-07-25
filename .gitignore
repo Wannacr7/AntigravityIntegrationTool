@@ -47,3 +47,5 @@ Thumbs.db
 # Antigravity / Agent CLI local temporary files
 .gemini/
 scratch/
+.antigravity/
+
