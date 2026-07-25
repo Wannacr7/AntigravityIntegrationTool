@@ -93,19 +93,21 @@ namespace Antigravity.Editor
         private string GenerateCsproj(Assembly assembly, List<Assembly> allAssemblies)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            sb.AppendLine("<Project ToolsVersion=\"4.0\" DefaultTargets=\"Build\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+            sb.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
             sb.AppendLine("  <PropertyGroup>");
             sb.AppendLine("    <LangVersion>latest</LangVersion>");
             sb.AppendLine("    <CsharpLangVersion>latest</CsharpLangVersion>");
-            sb.AppendLine("    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>");
-            sb.AppendLine("    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>");
+            sb.AppendLine("    <TargetFramework>netstandard2.1</TargetFramework>");
             sb.AppendLine($"    <RootNamespace>{assembly.rootNamespace ?? ""}</RootNamespace>");
             sb.AppendLine($"    <AssemblyName>{assembly.name}</AssemblyName>");
             sb.AppendLine($"    <ProjectGuid>{SolutionGuidGenerator.GuidForProject(assembly.name)}</ProjectGuid>");
             sb.AppendLine("    <OutputType>Library</OutputType>");
+            sb.AppendLine("    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>");
+            sb.AppendLine("    <EnableDefaultItems>false</EnableDefaultItems>");
             sb.AppendLine("    <NoConfig>true</NoConfig>");
             sb.AppendLine("    <NoStdLib>true</NoStdLib>");
+            sb.AppendLine("    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>");
+            sb.AppendLine("    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>");
             sb.AppendLine("    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
             sb.AppendLine("  </PropertyGroup>");
 
@@ -153,18 +155,6 @@ namespace Antigravity.Editor
                 sb.AppendLine("    </ProjectReference>");
             }
             sb.AppendLine("  </ItemGroup>");
-
-            // MSBuild options to prevent MSB3644 and framework facade loading errors in Roslyn/OmniSharp
-            sb.AppendLine("  <PropertyGroup>");
-            sb.AppendLine("    <NoConfig>true</NoConfig>");
-            sb.AppendLine("    <NoStdLib>true</NoStdLib>");
-            sb.AppendLine("    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>");
-            sb.AppendLine("    <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>");
-            sb.AppendLine("    <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>");
-            sb.AppendLine("  </PropertyGroup>");
-
-            sb.AppendLine("  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />");
-            sb.AppendLine("  <Target Name=\"GenerateTargetFrameworkMonikerAttribute\" />");
             sb.AppendLine("</Project>");
 
             return sb.ToString();
@@ -227,7 +217,6 @@ namespace Antigravity.Editor
   ""omnisharp.enableImportCompletion"": true,
   ""dotnet.defaultSolution"": ""{solutionName}"",
   ""csharp.solution"": ""{solutionName}"",
-  ""omnisharp.useModernNet"": false,
   ""omnisharp.projectLoadTimeout"": 120,
   ""omnisharp.enableRoslynAnalyzers"": true,
   ""omnisharp.enableEditorConfigSupport"": true,
