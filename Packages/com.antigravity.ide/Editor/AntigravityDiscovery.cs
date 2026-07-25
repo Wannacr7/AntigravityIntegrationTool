@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor.CodeEditor;
+using Unity.CodeEditor;
 using UnityEngine;
 
 namespace Antigravity.Editor

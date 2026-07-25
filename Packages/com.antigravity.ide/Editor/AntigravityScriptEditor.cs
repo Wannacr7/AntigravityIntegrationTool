@@ -2,8 +2,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Unity.CodeEditor;
 using UnityEditor;
-using UnityEditor.CodeEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
