@@ -144,5 +144,17 @@ namespace Antigravity.Editor
         {
             m_ProjectGeneration.SyncIfNeeded(addedFiles, deletedFiles, movedFiles, movedFromFiles, importedFiles);
         }
+
+        public void OnGUI()
+        {
+            EditorGUILayout.LabelField("Antigravity IDE Options", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox("Antigravity IDE is configured as your external script editor.", MessageType.Info);
+
+            if (GUILayout.Button("Regenerate C# Solution Files", GUILayout.Width(250)))
+            {
+                SyncAll();
+                Debug.Log("[Antigravity IDE] C# Solution and .csproj files successfully regenerated!");
+            }
+        }
     }
 }
