@@ -1,0 +1,18 @@
+{
+  "name": "com.antigravity.ide",
+  "version": "1.0.0",
+  "displayName": "Antigravity IDE Editor",
+  "description": "Integration package enabling Unity to support Antigravity IDE as an external code editor with full C# IntelliSense, solution generation, and seamless script opening.",
+  "unity": "2021.3",
+  "author": {
+    "name": "Antigravity Integration Team"
+  },
+  "dependencies": {},
+  "keywords": [
+    "antigravity",
+    "ide",
+    "editor",
+    "intellisense",
+    "csharp"
+  ]
+}
