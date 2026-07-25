@@ -202,17 +202,15 @@ namespace Antigravity.Editor
             string projectName = Path.GetFileName(m_ProjectDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
             string solutionName = projectName + ".sln";
 
-            string vscodeDir = Path.Combine(m_ProjectDirectory, ".vscode");
-            if (!Directory.Exists(vscodeDir))
-            {
-                Directory.CreateDirectory(vscodeDir);
-            }
-
-            string settingsPath = Path.Combine(vscodeDir, "settings.json");
             string settingsContent = $@"{{
   ""dotnet.defaultSolution"": ""{solutionName}"",
+  ""csharp.solution"": ""{solutionName}"",
   ""omnisharp.useModernNet"": false,
   ""omnisharp.projectLoadTimeout"": 120,
+  ""omnisharp.enableRoslynAnalyzers"": true,
+  ""omnisharp.enableEditorConfigSupport"": true,
+  ""csharp.inlayHints.parameters.enabled"": true,
+  ""csharp.inlayHints.types.enabled"": true,
   ""files.exclude"": {{
     ""**/.git"": true,
     ""**/.svn"": true,
@@ -229,13 +227,27 @@ namespace Antigravity.Editor
   }}
 }}";
 
-            try
+            string[] targetDirectories = new[]
             {
-                File.WriteAllText(settingsPath, settingsContent, Encoding.UTF8);
-            }
-            catch (Exception ex)
+                Path.Combine(m_ProjectDirectory, ".vscode"),
+                Path.Combine(m_ProjectDirectory, ".antigravity")
+            };
+
+            foreach (var dir in targetDirectories)
             {
-                Debug.LogWarning($"[Antigravity IDE] Could not write .vscode/settings.json: {ex.Message}");
+                try
+                {
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    string settingsPath = Path.Combine(dir, "settings.json");
+                    File.WriteAllText(settingsPath, settingsContent, Encoding.UTF8);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"[Antigravity IDE] Could not write settings in {dir}: {ex.Message}");
+                }
             }
         }
 
