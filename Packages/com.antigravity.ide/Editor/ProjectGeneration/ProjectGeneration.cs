@@ -154,7 +154,17 @@ namespace Antigravity.Editor
             }
             sb.AppendLine("  </ItemGroup>");
 
+            // MSBuild options to prevent MSB3644 and framework facade loading errors in Roslyn/OmniSharp
+            sb.AppendLine("  <PropertyGroup>");
+            sb.AppendLine("    <NoConfig>true</NoConfig>");
+            sb.AppendLine("    <NoStdLib>true</NoStdLib>");
+            sb.AppendLine("    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>");
+            sb.AppendLine("    <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>");
+            sb.AppendLine("    <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>");
+            sb.AppendLine("  </PropertyGroup>");
+
             sb.AppendLine("  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />");
+            sb.AppendLine("  <Target Name=\"GenerateTargetFrameworkMonikerAttribute\" />");
             sb.AppendLine("</Project>");
 
             return sb.ToString();
@@ -203,6 +213,18 @@ namespace Antigravity.Editor
             string solutionName = projectName + ".sln";
 
             string settingsContent = $@"{{
+  ""editor.codeLens"": true,
+  ""[csharp]"": {{
+    ""editor.codeLens"": true
+  }},
+  ""csharp.referencesCodeLens.enabled"": true,
+  ""csharp.showReferencesCodeLens"": true,
+  ""csharp.showMethodReferencesCodeLens"": true,
+  ""dotnet.codeLens.enableReferencesCodeLens"": true,
+  ""dotnet.codeLens.enableMethodReferencesCodeLens"": true,
+  ""omnisharp.enableCodeLens"": true,
+  ""omnisharp.enableDecompilationSupport"": true,
+  ""omnisharp.enableImportCompletion"": true,
   ""dotnet.defaultSolution"": ""{solutionName}"",
   ""csharp.solution"": ""{solutionName}"",
   ""omnisharp.useModernNet"": false,
@@ -211,6 +233,8 @@ namespace Antigravity.Editor
   ""omnisharp.enableEditorConfigSupport"": true,
   ""csharp.inlayHints.parameters.enabled"": true,
   ""csharp.inlayHints.types.enabled"": true,
+  ""dotnet.inlayHints.enableInlayHintsForParameters"": true,
+  ""csharp.inlayHints.enableInlayHintsForTypes"": true,
   ""files.exclude"": {{
     ""**/.git"": true,
     ""**/.svn"": true,
@@ -243,6 +267,15 @@ namespace Antigravity.Editor
                     }
                     string settingsPath = Path.Combine(dir, "settings.json");
                     File.WriteAllText(settingsPath, settingsContent, Encoding.UTF8);
+
+                    string extensionsContent = @"{
+  ""recommendations"": [
+    ""ms-dotnettools.csharp"",
+    ""ms-dotnettools.csdevkit""
+  ]
+}";
+                    string extensionsPath = Path.Combine(dir, "extensions.json");
+                    File.WriteAllText(extensionsPath, extensionsContent, Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {

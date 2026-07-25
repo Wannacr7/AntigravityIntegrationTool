@@ -135,6 +135,48 @@ namespace Antigravity.Editor
             }
         }
 
+        public bool InstallRecommendedExtensions()
+        {
+            string selectedEditorPath = CodeEditor.CurrentEditorInstallation;
+            if (string.IsNullOrEmpty(selectedEditorPath) || !File.Exists(selectedEditorPath))
+            {
+                var detectedInstallations = Installations;
+                if (detectedInstallations.Length > 0)
+                {
+                    selectedEditorPath = detectedInstallations[0].Path;
+                }
+            }
+
+            if (string.IsNullOrEmpty(selectedEditorPath))
+            {
+                Debug.LogError("[Antigravity IDE] Antigravity executable path could not be found.");
+                return false;
+            }
+
+            try
+            {
+                string[] extensions = new[] { "ms-dotnettools.csharp", "ms-dotnettools.csdevkit" };
+                foreach (var ext in extensions)
+                {
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = selectedEditorPath,
+                        Arguments = $"--install-extension {ext}",
+                        UseShellExecute = true,
+                        WorkingDirectory = Directory.GetCurrentDirectory()
+                    };
+                    Process.Start(startInfo);
+                }
+                Debug.Log("[Antigravity IDE] Sent command to install C# extensions (ms-dotnettools.csharp, ms-dotnettools.csdevkit).");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Antigravity IDE] Failed to trigger extension installation: {ex.Message}");
+                return false;
+            }
+        }
+
         public void SyncAll()
         {
             m_ProjectGeneration.Sync();
@@ -154,6 +196,11 @@ namespace Antigravity.Editor
             {
                 SyncAll();
                 Debug.Log("[Antigravity IDE] C# Solution and .csproj files successfully regenerated!");
+            }
+
+            if (GUILayout.Button("Install C# Extensions in IDE", GUILayout.Width(250)))
+            {
+                InstallRecommendedExtensions();
             }
         }
     }

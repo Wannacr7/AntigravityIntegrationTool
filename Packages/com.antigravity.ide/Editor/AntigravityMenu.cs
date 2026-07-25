@@ -22,6 +22,13 @@ namespace Antigravity.Editor
             Debug.Log("[Antigravity IDE] C# Solution and .csproj files successfully regenerated!");
         }
 
+        [MenuItem("Antigravity/Install C# Extensions in IDE", false, 12)]
+        public static void InstallExtensions()
+        {
+            var editor = new AntigravityScriptEditor();
+            editor.InstallRecommendedExtensions();
+        }
+
         [MenuItem("Antigravity/Set as Active Unity Editor", false, 30)]
         public static void SetAsActiveEditor()
         {
