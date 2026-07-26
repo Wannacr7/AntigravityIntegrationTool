@@ -215,6 +215,7 @@ namespace Antigravity.Editor
   ""omnisharp.enableCodeLens"": true,
   ""omnisharp.enableDecompilationSupport"": true,
   ""omnisharp.enableImportCompletion"": true,
+  ""dotnet.server.useOmnisharp"": true,
   ""dotnet.defaultSolution"": ""{solutionName}"",
   ""csharp.solution"": ""{solutionName}"",
   ""omnisharp.projectLoadTimeout"": 120,
